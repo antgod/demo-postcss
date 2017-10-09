@@ -5,6 +5,8 @@ const myplugin = require('../postcss-plugin-demo');
 
 gulp.task('css', function () {
 	return gulp.src('./src/*.css')
-		.pipe(postcss())
+		.pipe(postcss( [
+			myplugin()
+		]))
 		.pipe(gulp.dest('./dest'));
 });

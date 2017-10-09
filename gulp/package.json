@@ -1,0 +1,10 @@
+{
+  "name": "gulpcss",
+  "version": "1.0.0",
+  "author": "antgod",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-postcss": "^6.0.0"
+  }
+}

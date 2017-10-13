@@ -5,6 +5,7 @@
 ## gulp
 ```
 $ sudo npm gulp -g
+$ git clone https://github.com/antgod/postcss-stage.git
 $ cd postcss-plugin-demo && npm i
 $ cd ../gulp && npm i
 & gulp css
@@ -12,7 +13,8 @@ $ cd ../gulp && npm i
 
 ## webpack
 ```
-$ sudo npm gulp -g
+$ sudo npm webpack -g
+$ git clone https://github.com/antgod/postcss-stage.git
 $ cd postcss-plugin-demo && npm i
 $ cd ../webpack && npm i
 & webpack

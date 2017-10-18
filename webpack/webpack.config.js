@@ -1,5 +1,7 @@
 const webpack = require('webpack')
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const myplugin = require('../postcss-plugin-demo');
+const processors = [ myplugin() ]
 
 module.exports = {
   entry: {
@@ -19,9 +21,7 @@ module.exports = {
           loader: 'postcss-loader',
           options: {
             plugins() {
-              return [
-                require('../postcss-plugin-demo')()
-              ]
+              return processors
             }
           }
         }]

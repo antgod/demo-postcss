@@ -1,9 +1,9 @@
 const postcss = require('postcss')
 
-function replaceValues(str) {
-  const mapper = {
-    helloworld: 'Arial, Helvetica, sans-serif'
-  }
+function replaceValues(str, options) {
+  const mapper = Object.assign({
+		helloworld: 'Arial, Helvetica, sans-serif',
+  }, options)
 
   return str.replace(/(.*)family\(\"(.*)\"\)/, (all, prefix, matched, index, input) => {
     const mapped = mapper[matched]
@@ -35,7 +35,7 @@ module.exports = postcss.plugin('myplugin', function (options) {
 
 			console.log(`${rowIndex + 1 }.处理选择器：`, rule.selector)
 			rule.walkDecls(function (decl, i) {
-				const { prop, value} = decl
+				const { prop, value } = decl
 				console.log(`${rowIndex + 1 }.${i + 1 }.处理选择器属性：`, decl.prop)
 
         // 转换rem为px
@@ -53,10 +53,10 @@ module.exports = postcss.plugin('myplugin', function (options) {
 
 				// 转换关键字
         if (value.includes('family')) {
-          decl.value = replaceValues(value);
+          decl.value = replaceValues(value, options);
         }
 			})
-      rule.append({ text: '用户自定义样式' })
+      // rule.append({ text: '用户自定义样式' })
 		})
 	}
 })

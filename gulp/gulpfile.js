@@ -1,8 +1,9 @@
-const gulp = require('gulp');
-const postcss = require('gulp-postcss');
+const gulp = require('gulp')
+const postcss = require('gulp-postcss')
+const config = require('./package.json')
+const myplugin = require('../postcss-plugin-demo')
 
-const myplugin = require('../postcss-plugin-demo');
-const processors = [ myplugin() ]
+const processors = [ myplugin(config.myConfig) ]
 
 gulp.task('css', function () {
 	return gulp.src('./src/*.css')

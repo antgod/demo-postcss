@@ -1,7 +1,9 @@
 const webpack = require('webpack')
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const myplugin = require('../postcss-plugin-demo');
-const processors = [ myplugin() ]
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const myplugin = require('../postcss-plugin-demo')
+const config = require('./package.json')
+
+const processors = [ myplugin(config.myConfig) ]
 
 module.exports = {
   entry: {

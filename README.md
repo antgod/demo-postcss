@@ -1,6 +1,8 @@
-# postcss插件脚手架
+# postcss样例使用文档
 
-仓库提供了gulp与webpack两个版本postcss脚手架。
+[开发文档][1]
+
+仓库提供了gulp与webpack两个版本postcss样例。
 
 ## gulp
 ```
@@ -50,3 +52,5 @@ a {
 }
 
 ```
+
+[1]: https://github.com/antgod/postcss-demo/blob/master/document.md

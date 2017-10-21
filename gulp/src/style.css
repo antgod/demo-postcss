@@ -3,3 +3,7 @@ a {
 	font-size: 1rem;
 	flex: 1;
 }
+
+label {
+	font-family: "Open Sans", family("myHelloworld");
+}

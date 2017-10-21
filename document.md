@@ -1,9 +1,11 @@
-### PostCSS无师从入门到自通-插件编写
-
+### PostCSS简介
+- 介绍
 PostCSS 是一个翻译样式的js插件。它能帮你对css做静态分析。支持变量和混入.编译尚未被浏览器支持的css预发，内联图片等等。业界被广泛地应用，其中不乏很多有名的行业领导者，如：维基百科，Twitter，阿里巴巴， JetBrains。PostCSS 的 Autoprefixer 插件是最流行的 CSS 处理工具之一。
 
+- 发展
 PostCSS 是 Autoprefixer 的开发者 Andrey Sitnik 开发的，最初是一个通过 JavaScript 来处理 CSS 的方法。PostCSS 本身只是一个 API，不过加上庞大的插件生态体系，作用就非常强大了。为了提供有用的调试功能，PostCSS 还生成了源码的 map，而且还提供了抽象语法树(AST)来帮助我们理解代码是如何被转换的。
 
+- 作用
 JavaScript 能做到比其他处理方式更快的转换我们的样式。通过Gulp或Webpack这样的task工具，我们可以在 build 过程中对样式进行转换，这与 Sass 和 LESS 的编译过程非常类似。React 和 AngularJS 这样的库和框架还允许我们在 JavaScript 中直接编写 CSS 代码，这为使用 JavaScript 来转换样式打开了一扇大门。
 
 [PostCSS介绍][1]
@@ -55,9 +57,9 @@ a {
 
 虽然我们是在创建自己的插件，但是仍然需要先创建一个空的Gulp或Webpack项目。
 
-[PostCSS介绍][4]中有完整的项目搭建说明。如果你不想自己搭建环境，你也可以使用[PostCSS脚手架][5]，这里有完整的gulp与webpack已搭建好的环境以及运行文档。
+[PostCSS介绍][4]中有完整的项目搭建说明。如果你不想自己搭建环境，你也可以使用[PostCSS样例][5]，这里有完整的gulp与webpack已搭建好的环境以及运行文档。
 
-### 创建插件(refer:[编写PostCSS插件][6])
+### [编写PostCSS插件][6]
 
 在`node_modules`中创建一个文件夹命名为 `postcss-plugin-demo`。常见的命名方式是使用postcss-前缀，明确插件是PostCSS插件。由于某些编辑器node_modules是隐藏文件夹，不易编写代码，我们也可以把`postcss-plugin-demo`移动到与`node_modules`并列文件夹。
 
@@ -69,17 +71,17 @@ const postcss = require('postcss')
 接下来是基本的包装器，用来包装我们的插件处理代码：
 ```
 const postcss = require('postcss');
- 
+
 module.exports = postcss.plugin('myplugin', function myplugin(options) {
- 
+
     return function (css) {
- 
+
         options = options || {};
-         
+
         // Processing code will be added here
- 
+
     }
- 
+
 });
 ```
 
@@ -87,13 +89,13 @@ module.exports = postcss.plugin('myplugin', function myplugin(options) {
 现在你可以加载你刚刚创建的插件了。但是插件里面没有任何代码，我们仅仅想得到必要的设置。
 
 #### 通过Gulp加载
-如果你使用Gulp,`gulpfile.js`导入刚才的插件。
+如果你使用Gulp,`gulpfile.js`导入刚才的插件：
 ```
 const myplugin = require('../postcss-plugin-demo');
 const processors = [ myplugin() ]
 ```
 
-并且把css封装成task命令
+并且把css封装成task命令：
 ```
 gulp.task('css', function () {
 	return gulp.src('./src/*.css')
@@ -110,16 +112,16 @@ $ gulp css
 
 #### 通过Webpack加载
 
-webpack不能直接编译css文件，必须通过js引入css才能编译。`webpack.config.js`导入刚才的插件。
+webpack不能直接编译css文件，必须通过js引入css才能编译。`webpack.config.js`导入刚才的插件：
 ```
 const myplugin = require('../postcss-plugin-demo');
 const processors = [ myplugin() ]
 ```
 
-并且把css封装成rules规则
+并且把css封装成rules规则：
 ```
 {
-  ...   
+  ...
   module: {
     rules: [
       {
@@ -140,20 +142,20 @@ const processors = [ myplugin() ]
     ]
   },
   ...
-}  
+}
 ```
 
-然后运行
+然后运行：
 ```
 $ webpack
 ```
-即可在`dest`目录下生成新的编译后文件`style.css`
+即可在`dest`目录下生成新的编译后文件`style.css`。
 
 ### 编写插件功能
 #### 添加css
-开始编写插件之前，我们先创建一段插件编译的样式测试代码
+开始编写插件之前，我们先创建一段插件编译的样式测试代码。
 
-在你的`src/style.css`下添加
+在你的`src/style.css`下添加：
 ```
 a {
 	font-family: "Open Sans", family("helloworld");
@@ -162,11 +164,10 @@ a {
 }
 ```
 
-现在，因为你的插件并没有做任何事情，如果你编译你的css文件你会在`dest`文件夹下面看到完全一样的复制代码`dest/style.css`
+现在，因为你的插件并没有做任何事情，如果你编译你的css文件你会在`dest`文件夹下面看到完全一样的复制代码`dest/style.css`。
 
 #### 开始编写插件
-在你的插件`postcss-plugin-demo/index.js`里`options = options || {}`下添加
-
+在你的插件`postcss-plugin-demo/index.js`里`options = options || {}`下添加：
 ```
 /* 插入初始化html, body属性 */
 const base = postcss.parse(`html, body, ul{
@@ -175,11 +176,11 @@ const base = postcss.parse(`html, body, ul{
 }`)
 css.prepend(base)
 ```
-返回到gulp(或webpack)运行编译命令
+返回到gulp(或webpack)运行编译命令：
 ```
-$ gulp css 
+$ gulp css
 ```
-查看你的编译后文件，插入了一段语句
+查看你的编译后文件，插入了一段语句：
 ```
 html, body, ul{
 	margin: 0;
@@ -191,23 +192,23 @@ html, body, ul{
 更多API请查看：[PostCSS API][2]
 
 #### 遍历你的css样式表
-在css中，每个选择器以及后面的样式叫做`rule`规则，每行样式叫做`decl`声明,例如
+在css中，每个选择器以及后面的样式叫做`rule`规则，每行样式叫做`decl`声明,例如：
 ```
 a {
     color: red;
 }
 ```
-那么这个css就一条`rule`，这个`rule`有一条`decl`。
+那么这个css就一条规则`a{ color: red; }`，这个规则有一个声明`color: red;`。
 
-如果我们想遍历查询我们的样式文件，我们可以添加以下代码在`options = options || {}`下面
+如果我们想遍历查询我们的样式文件，我们可以在`options = options || {}`下面添加以下代码：
 
 ```
 css.walkRules(function (rule) {
- 
+
     rule.walkDecls(function (decl, i) {
- 
+
     });
- 
+
 });
 ```
 使用`walkRules`来遍历css文件每一条规则，接着，在每条规则里面，使用`walkDecls`遍历你的每一条声明。
@@ -215,7 +216,7 @@ css.walkRules(function (rule) {
 ### 给某些选择器增加样式
 `walkRules`的回调函数里有两个参数，第一个参数就是规则，第二个参数是规则的索引。如果感兴趣，可以手动把规则全部打印出来看一下。
 
-`rule.selector`用来获取规则的选择器名称。我们把所有的文字选择器增加两条css声明，黑色文字，白色背景。添加这段代码到`walkRules`回调函数下面。
+`rule.selector`用来获取规则的选择器名称。我们把所有的文字选择器增加两条css声明，黑色文字，白色背景。在`walkRules`回调函数下面添加这段代码：
 ```
 const texts = ['label', 'a', 'span']
 if(texts.includes(rule.selector)) {
@@ -226,11 +227,11 @@ if(texts.includes(rule.selector)) {
 }
 console.log(`${rowIndex + 1 }.处理选择器：`, rule.selector)
 ```
-返回到gulp(或webpack)运行编译命令
+返回到gulp(或webpack)运行编译命令：
 ```
 $ gulp css
 ```
-查看你的编译后文件
+查看你的编译后文件：
 ```
 html, body, ul{
 	margin: 0;
@@ -247,21 +248,21 @@ a {
 ```
 `a`选择器的规则里添加了`color,background-color`两个样式。
 
-同时，控制台打印出来
+同时，控制台打印出来：
 ```
 $ 1.处理选择器： html, body, ul
 $ 2.处理选择器： a
 ```
 
 ### 处理具体样式声明
-`walkDecls`的回调函数里同样有有两个参数
+`walkDecls`的回调函数里同样有有两个参数。
 
 - 第一个参数是样式声明，例如`font-family: "Open Sans", family("helloworld");`
 - 第二个参数是声明的索引。声明里有两个重要的属性`prop, value`。
     - pros: 样式名称，例如`font-family`
     - value: 样式值，例如`"Open Sans", family("helloworld")`。
 
-利用这两个值，我们就可以随意处理样式声明。添加以下代码到`walkDecls`回调函数之内。
+利用这两个值，我们就可以随意处理样式声明。在`walkDecls`回调函数之内添加以下代码：
 ```
 // 转换rem为px
 if(value.includes('rem')) {
@@ -282,7 +283,7 @@ if (value.includes('family')) {
 }
 ```
 
-这里的`reaplaceValues`函数可以随意实现，我们暂时用以下代码（看不懂没事，正则写法比难懂）
+这里的`reaplaceValues`函数可以随意实现，我们暂时用以下代码（看不懂可以慢慢看，正则写法比难懂）
 ```
 function replaceValues(str) {
   const mapper = {
@@ -296,11 +297,11 @@ function replaceValues(str) {
 }
 ```
 
-返回到gulp(或webpack)运行编译命令
+返回到gulp(或webpack)运行编译命令：
 ```
 $ gulp css
 ```
-查看你的编译后文件
+查看你的编译后文件：
 ```
 html, body, ul{
 	margin: 0;
@@ -318,7 +319,7 @@ a {
 
 可以看到,`flex`属性增加了前缀，`1rem`编译成了`12px`，`family("helloworld")`编译成`Arial, Helvetica, sans-serif`。
 
-同时控制台准确的打印出每条规则与每个声明。
+同时控制台准确的打印出每条规则与每个声明：
 ```
 1.处理选择器： html, body, ul
 1.1.处理选择器属性： margin
@@ -341,14 +342,14 @@ a {
 
 这种情况我们可以让用户传入要编译的内容。然后在插件内与`helloworld`合并。
 
-修改`gulp/package.json`，添加用户自定义编译内容到最外层json。
+修改`gulp/package.json`，添加用户自定义编译内容到最外层json：
 ```
 "myConfig": {
   "myHelloworld": "Arial, Helvetica Neue, Helvetica, sans-serif"
 }
 ```
 
-把用户定义的编译内容传入插件内
+把用户定义的编译内容传入插件内：
 ```
 const gulp = require('gulp')
 const postcss = require('gulp-postcss')
@@ -364,13 +365,13 @@ gulp.task('css', function () {
 });
 ```
 
-插件的包装器回调传入的`options`就是刚才我们传入的`myConfig`
+插件的包装器回调传入的`options`就是刚才我们传入的`myConfig`：
 ```
 module.exports = postcss.plugin('myplugin', function (options) {
 	return function (css) {
 		options = options || {}
 ```
-我们把这个属性传入`replaceValues`函数中，与helloworld合并
+我们把这个属性传入`replaceValues`函数中，与helloworld合并：
 ```
 function replaceValues(str, options) {
   const mapper = Object.assign({
@@ -384,7 +385,7 @@ function replaceValues(str, options) {
 }
 ```
 
-然后我们修改`src/style.css`，添加一个新规则`label`,引用刚才定义的`myHelloworld`
+然后我们修改`src/style.css`，添加一个新规则`label`,引用刚才定义的`myHelloworld`：
 ```
 a {
 	font-family: "Open Sans", family("helloworld");
@@ -397,11 +398,11 @@ label {
 }
 
 ```
-返回到gulp(或webpack)运行编译命令
+返回到gulp(或webpack)运行编译命令：
 ```
 $ gulp css
 ```
-查看你的编译后文件，这就是我们最终的代码了
+查看你的编译后文件，这就是我们最终的代码了：
 ```
 html, body, ul{
 	margin: 0;
@@ -429,13 +430,13 @@ label {
 
 你完成了所有想实现的功能。
 
-如果有什么不理想的地方，请参考这份代码:[PostCSS Demo][5]
+如果有什么不理想的地方，请参考这份代码：[PostCSS Demo][5]
 
 ### 让我们回顾一下
 
-你刚刚创建了PostCSS插件，我希望在你的脑海中迸发出一些其他插件的想法并且你很乐于去创造他们。也许写css时候，你总被各种小东西所困扰，现在你可以用自己的解决方案去解决它。或者你可能想到css除了盒模型，仍然去做一些其他的事情，现在，你可以自己实现它。
+你刚刚创建了PostCSS插件，我希望你已经迸发出一些其他插件的想法，并且你很愿意去实现他们。或许写css时候，总被各种重复的小问题困扰，现在你可以尝试用自己的解决方案去解决它。另外，你也许想到css除了盒子模型，还可以做一些其他的事情，你都可以慢慢实现。
 
-总结下我们的功能点：
+### 总结下我们的功能点：
 
 - Start developing a new plugin by setting up a Gulp or Grunt project to work in.
 - Create a new node module inside your project, which will become your plugin.
